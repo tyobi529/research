@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VisualStudioProject ProjectCreator="Intel Fortran" Keyword="Console Application" Version="11.0" ProjectIdGuid="{C579AA20-8CC9-44C5-AD3E-746B8EAEF8D6}">
+	<Platforms>
+		<Platform Name="Win32"/></Platforms>
+	<Configurations>
+		<Configuration Name="Debug|Win32">
+				<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true" DebugInformationFormat="debugEnabled" Optimization="optimizeDisabled" Interfaces="true" WarnInterfaces="true" Traceback="true" BoundsCheck="true" RuntimeLibrary="rtMultiThreadedDebug"/>
+				<Tool Name="VFLinkerTool" LinkIncremental="linkIncrementalNo" SuppressStartupBanner="true" GenerateDebugInformation="true" SubSystem="subSystemConsole"/>
+				<Tool Name="VFResourceCompilerTool"/>
+				<Tool Name="VFMidlTool" SuppressStartupBanner="true"/>
+				<Tool Name="VFCustomBuildTool"/>
+				<Tool Name="VFPreLinkEventTool"/>
+				<Tool Name="VFPreBuildEventTool"/>
+				<Tool Name="VFPostBuildEventTool"/>
+				<Tool Name="VFManifestTool" SuppressStartupBanner="true"/></Configuration>
+		<Configuration Name="Release|Win32">
+				<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true"/>
+				<Tool Name="VFLinkerTool" LinkIncremental="linkIncrementalNo" SuppressStartupBanner="true" SubSystem="subSystemConsole"/>
+				<Tool Name="VFResourceCompilerTool"/>
+				<Tool Name="VFMidlTool" SuppressStartupBanner="true"/>
+				<Tool Name="VFCustomBuildTool"/>
+				<Tool Name="VFPreLinkEventTool"/>
+				<Tool Name="VFPreBuildEventTool"/>
+				<Tool Name="VFPostBuildEventTool"/>
+				<Tool Name="VFManifestTool" SuppressStartupBanner="true"/></Configuration></Configurations>
+	<Files>
+		<Filter Name="ソースファイル" Filter="f90;for;f;fpp;ftn;def;odl;idl">
+		<File RelativePath=".\globals.f90"/>
+		<File RelativePath=".\ORI-A-5-CNA-1.0.f90"/>
+		<File RelativePath=".\sub_confirm.f90"/>
+		<File RelativePath=".\sub_connect_1.f90"/>
+		<File RelativePath=".\sub_connect_2.f90"/>
+		<File RelativePath=".\sub_connection.f90"/>
+		<File RelativePath=".\sub_dwq_diff.f90"/>
+		<File RelativePath=".\sub_dwq_ori.f90"/>
+		<File RelativePath=".\sub_flux.f90"/>
+		<File RelativePath=".\sub_fluxsw.f90"/>
+		<File RelativePath=".\sub_forward.f90"/>
+		<File RelativePath=".\sub_hyd_graph.f90"/>
+		<File RelativePath=".\sub_incld.f90"/>
+		<File RelativePath=".\sub_initiald.f90"/>
+		<File RelativePath=".\sub_mdvel.f90"/>
+		<File RelativePath=".\sub_rdt.f90"/>
+		<File RelativePath=".\sub_sentan.f90"/>
+		<File RelativePath=".\sub_upq_diff.f90"/>
+		<File RelativePath=".\sub_upq_ori.f90"/>
+		<File RelativePath=".\sub_write.f90"/>
+		<File RelativePath=".\sub_write_tec.f90"/>
+		<File RelativePath=".\subprogs.f90"/></Filter>
+		<Filter Name="ヘッダーファイル" Filter="fi;fd"/>
+		<Filter Name="リソースファイル" Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"/>
+		<File RelativePath=".\ReadMe.txt"/></Files>
+	<Globals/></VisualStudioProject>
