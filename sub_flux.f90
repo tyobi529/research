@@ -15,11 +15,11 @@
       real(8) sumf, rr, rnof, h1, dv, vzan
       integer li, k, k2, me1, me2
       integer me, it, ln1, ln2
-      
+
       integer i, j
       real(8) ame(1000,1000)
       character(len=50) inputname
-      
+
       do li = 1, link
       if(limesh(li, 2) == 0) goto 300
       if(inf(limesh(li, 2)) == 0) goto 300
@@ -69,11 +69,11 @@
         endif
         lhan(li) = 1
         goto 301
-        
+
          if(isnan(um(li)) .eqv. .TRUE.) then
          pause "2 error"
          endif
-        
+
       endif
 !     ++++++++++++++++++++++++++++++++
 !         　水面が連続
@@ -86,7 +86,9 @@
         do k = 1, ko(limesh(li, 1))
           if(lhano(melink(limesh(li, 1), k)) == 1) goto 321
           if(melink(limesh(li, 1), k) == li) goto 321
+					! 同一メッシュで他のノードの番号
           k2 = mod(k, ko(limesh(li, 1))) + 1
+					! ノード間の距離の計算
           dx = dnox(menode(limesh(li, 1), k2)) - dnox(menode(limesh(li, 1), k))
           dy = dnoy(menode(limesh(li, 1), k2)) - dnoy(menode(limesh(li, 1), k))
 	    if(uu(melink(limesh(li, 1), k))*dy > 0.0d0) then
@@ -125,6 +127,7 @@
             if(limesh(li, 2) == limesh(melink(limesh(li, 2), k), 1)) me2 = limesh(melink(limesh(li, 2), k), 2)
             if(limesh(li, 2) == limesh(melink(limesh(li, 2), k), 2)) me2 = limesh(melink(limesh(li, 2), k), 1)
 	    endif
+			! リンク中点の流速×重心のフラックス×ノード間の距離
           u11 = u11 + uu(melink(limesh(li, 2), k))*umm(me1)*dy - vv(melink(limesh(li, 2), k))*umm(me2)*dx
           v11 = v11 + uu(melink(limesh(li, 2), k))*vnm(me1)*dy - vv(melink(limesh(li, 2), k))*vnm(me2)*dx
   322   enddo
@@ -133,13 +136,14 @@
 !     ===============
 !         重力項
 !     ===============
+				! リンクが接する2つのメッシュの距離
         dx = xmesh(limesh(li, 2)) - xmesh(limesh(li, 1))
         dy = ymesh(limesh(li, 2)) - ymesh(limesh(li, 1))
         dl = sqrt(dx**2 + dy**2)
         if(dl /= 0.0d0) then
           u13 = gg*hl(li)*dt2/dl*ux(li)*(h(limesh(li, 2)) + baseo(limesh(li, 2)) - h(limesh(li, 1)) - baseo(limesh(li, 1)))
           v13 = gg*hl(li)*dt2/dl*uy(li)*(h(limesh(li, 2)) + baseo(limesh(li, 2)) - h(limesh(li, 1)) - baseo(limesh(li, 1)))
-        else        
+        else
           u13 = 0.0d0
           v13 = 0.0d0
         endif
@@ -173,8 +177,8 @@
       entry suisin(rnof)
 
       it = int(time/dtrain) + 1
-!小栗栖用    
-        if(it>=1261) goto 756     
+!小栗栖用
+        if(it>=1261) goto 756
       write(inputname,4010) it
         4010format('inputdata/rain/OGURISU-',i4.4,'rain.dat')
         open(510,file=inputname,action='read')
@@ -185,7 +189,7 @@
             enddo
         close(510)
         4020format(f10.3)
-      756 continue   
+      756 continue
       do me = 1, mesh
         if(inf(me) == 0) goto 402
 !       ------------------------
@@ -203,20 +207,20 @@
 !       ------------------------
 !             雨量の計算
 !       ------------------------
-        !rr = rain(me,it)*rnof*0.75d0     
+        !rr = rain(me,it)*rnof*0.75d0
         ! *(1.0d0 - lambda(me))  ! 됄돫궔귞궻봱릣똭뱷귩빶뱑뛩궑?E????E
 
-!小栗栖用 
+!小栗栖用
         if(time<33000.0d0) rr = ame(ii(me), jj(me))*rnof*0.22d0
         if(time>=33000.0d0 .and. time<43800.0d0) rr = ame(ii(me), jj(me))*rnof*0.40d0
         if(time>=43800.0d0 .and. time<75600.0d0) rr = ame(ii(me), jj(me))*rnof*0.74d0
         if(time>=75600.0d0) rr=0.0d0
-        
- 
+
+
 !       ------------------------
 !              h　計算
 !       ------------------------
-       
+
 
       do j=1,10
         if(me==con_mesh(j)) then  !connection (畑川)
@@ -224,25 +228,25 @@
                        + rr/1000.0d0/dtrain*dt2/(1.0d0 - lambda(me))  &
                        + qlme(me)*dt2/(1.0d0 - lambda(me))  &
                        +q_con(con_mh(j))*dt2/smesh(me)/(1.0d0 - lambda(me))
-        h(me) = max(h(me), 0.0d0)               
+        h(me) = max(h(me), 0.0d0)
         goto 402
         endif
       enddo
-      
+
 !      if(me==31315 .or. me==31443) then  ! qq(it)
 !       h(me) = ho(me) - dt2*(sumf/smesh(me)/(1.0d0 - lambda(me)))    &
 !                       + rr/1000.0d0/dtrain*dt2/(1.0d0 - lambda(me))  &
 !                       + qlme(me)*dt2/(1.0d0 - lambda(me))  &
 !                       -qq(it)/2.0d0/smesh(me)*dt2/(1.0d0 - lambda(me))
-!                              
+!
 !      else
         h(me) = ho(me) - dt2*(sumf/smesh(me)/(1.0d0 - lambda(me)))    &
                        + rr/1000.0d0/dtrain*dt2/(1.0d0 - lambda(me))  &
                        + qlme(me)*dt2/(1.0d0 - lambda(me))
         h(me) = max(h(me), 0.0d0)
-                      
-!      endif                 
- 
+
+!      endif
+
   402 enddo
  !      ------------------------ hh(it)
 !       it = int(time/dtrain) + 1
@@ -255,7 +259,7 @@
        h(31443) = h(31443)-qq(it)/2.0d0/smesh(31443)*dt2/(1.0d0 - lambda(me))
        h(31315) = max(h(31315),0.0d0)
        h(31443) = max(h(31443),0.0d0)
-      
+
       end subroutine flux
-	  
+
 end Module sub_flux
