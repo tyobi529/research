@@ -8,6 +8,7 @@ tsec:秒
 
 sub_connect_1.f90
 DV:グレーチング１つあたりの地表面から雨水ますに流入する流量
+   雨水ますから下水道に流入する流量
 CDW:堰の公式の係数
 CDO:オリフィスの公式の係数
 L1:グレーチングの縦の長さ
@@ -28,15 +29,27 @@ uu,vv:リンク中点の流速
 um,vn:リンク中点のフラックス？um =（um*hl) "sub_flux.f90"のfluxで求める。
 uum,vvm:重心の流速
 umm,vnm:重心のフラックス
+u11:連続式の移流項（3辺のリンクのフラックス×図心の速度）
+u13:連続式の重力項
+
 
 ファイル
 "inputdata/manhole.dat" 11番
 mnhl:マンホールの総数
 id_mh(n):マンホールの番号
-grp_mh(n)
-no_mh(n), bs_mh(n), kubun_mh(n), shp_mh(n),
+grp_mh(n):多分使ってない
+no_mh(n):使ってない
+bs_mh(n):マンホール底の標高
+kubun_mh(n):
+shp_mh(n):マンホールの形状
 x_mh(n), y_mh(n):マンホールの座標
-area_mh(n), num(n), (isw_mh(n,j), j=1,num(n))
+area_mh(n):断面積
+num(n):マンホールにつながっている管の数(２なら直線,３ならT字の真ん中,１なら管の端)
+(isw_mh(n,j), j=1,num(n)):同じ間でつながっているマンホールの番号
+--------------------------------
+MARK_SW_CHECK(i):(i=1~6,31,49,124,127は0、それ以外は1)
+MARK_MH_CHECK(i):(i=3,4,32,37,39,42,44,45,47,49は0、それ以外は1)
+
 
 "inputdata/conduit.dat" 12番
 iswr:管の総数
@@ -45,11 +58,13 @@ idshp_sw(i):管の形状（1:長方形,2:円形）
 idd1:管の幅(mm) dd1_sw(i):mに換算
 idd2:管の高さ※円形の場合は半径
 slp_sw(i):傾き（0.2なら1000mに対して0.2m下がる）
-dst_sw(i):使ってない
+dst_sw(i):管の長さ（座標から算出しており、一つの管の合計が代入される）
 bsup_sw(i), bsdw_sw(i):上流端/下流端の標高
 mhup_sw(i), mhdw_sw(i):上流端/下流端に接続されているマンホール番号
 ipt_sw(i):その管につながるマンホールの数（１つの直線なら２）
 (x_sw(i,j), y_sw(i,j), j=1,ipt_sw(i)):管につながるマンホールの座標（"ipt_sw"の値によってデータの数が異なる）
+jswr(i):20mの管何個分か（切り捨てなので50mの管なら2）
+
 
 "inputdata/ogurisu_fujita_2.dat" 13番
 node=73862
@@ -61,11 +76,19 @@ MESH=146600
 N, I, J, K, MARK(ME)
 MARK(ME)はメッシュの属性？建物・道路・河川・その他
 
-"inputdata/h-ar.dat" 14番
-"inputdata/bs_120.dat" 15番
-"inputdata/x-rain-ogurisu_1110_b.dat" 16番
+"inputdata/h-ar.dat" 14番 下水管内の水深と断面積の変換
+h_spc(k):2L/D？ L:潤辺
+a_spc(k):A/A0(A:水がある部分の断面積)
+r_spc(k):R/R0
+A:水が溜まっている部分の断面積 A0:管の断面積 R:径深 R0:水がいっぱいの時の径深
+h:水がある部分の水深 D:管の直径
 
-"inputdata/mesh_ogurisu_fugita.dat" 17番メッシュ
+"inputdata/bs_120.dat" 15番
+baseo(me):メッシュの標高
+
+"inputdata/x-rain-ogurisu_1110_b.dat" 16番 使ってない
+
+"inputdata/mesh_ogurisu_fugita.dat" 17番
 mesh=146600
 ko(me) メッシュの辺(頂点)の数
 (menode(me, k), k = 1, ko(me)) メッシュを構成するノードの番号（３つ）
@@ -74,7 +97,7 @@ smesh(me) メッシュの面積(m**2)
 xmesh(me), ymesh(me) メッシュの重心のxy座標
 (rtuv(me, k), k = 1, ko(me)) 重心の速度(umm,vnm)を出すための重み（３つ）
 
-"inputdata/link_ogurisu_fugita.dat" 18番メッシュのリンク？
+"inputdata/link_ogurisu_fugita.dat" 18番
 link=220461 リンクの数
 limesh(li, 1), limesh(li, 2) そのリンクが接するメッシュの番号
 linode(li, 1), linode(li, 2) そのリンクの両端のノード番号
@@ -82,6 +105,7 @@ linode(li, 1), linode(li, 2) そのリンクの両端のノード番号
 scv(li) 連続した水面の流速(移流項)計算に必要な値
 rthl(li, 1),rthl(li, 2) リンクの中点における水深を求めるための重み
 ux(li), uy(li) 速度をxy方向に分解するための値
+hl(li):メッシュの図心の水深
 
 "inputdata/pump.dat"
 "out/H-SDM-2.dat"
@@ -89,8 +113,14 @@ ux(li), uy(li) 速度をxy方向に分解するための値
 "out/V-SDM-2.dat"
 "out/sewer_ogurisu.dat"
 
+SUBROUTINE STORM_BOX
+NM:道路属性を持つメッシュの総数(計算用)
+SDBR:道路属性を持つメッシュの総数
 
-
+subroutine fluxsw
+ac_cnq 流量に関するパラメータ？
+q_con_total(con_mh(j))
+q_con(con_mh(j))
 
 meshデータ入力流れ
 

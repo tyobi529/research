@@ -186,11 +186,11 @@ ENDIF
 !     =====================================================
 !                       �f�[�^�ǂݍ���
 !     =====================================================
-      CALL DISKP_INITIAL
-      call rdat
+      CALL DISKP_INITIAL !書き込み用処理？
+      call rdat !16番以外のファイル読み込み
       CALL MH_MESH    ! MANHOLE MESH GENERATION
       CALL PM_MESH ! PUMPING STATION MESH GENERATION
-      CALL TEC_GROUND
+      CALL TEC_GROUND !書き込み用？
       CALL TEC_PIPEGRID
       CALL TEC_MH
 !      CALL TEC_PM
@@ -220,13 +220,13 @@ ENDIF
 !          �^��������
 !     $$$$$$$$$$$$$$$$$$$$
 
-1	  call flux
+1	  call flux !リンク中点のフラックスを求める
 !1  continue
 !write(*,*)'------------------------------'
 !      call flux
       call fluxsw
-      CALL CONNECT_1
-      CALL CONNECT_2
+      CALL CONNECT_1 !地表面-雨水ますの交換流量計算
+      CALL CONNECT_2 !雨水ます-下水道管の交換流量計算
 
 !     =====================
 !        先端の処理

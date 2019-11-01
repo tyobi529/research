@@ -83,6 +83,7 @@
 !     ========================
         u11 = 0.0d0
         v11 = 0.0d0
+				! メッシュの辺の数だけループ
         do k = 1, ko(limesh(li, 1))
           if(lhano(melink(limesh(li, 1), k)) == 1) goto 321
           if(melink(limesh(li, 1), k) == li) goto 321
@@ -104,6 +105,7 @@
             if(limesh(li, 1) == limesh(melink(limesh(li, 1), k), 1)) me2 = limesh(melink(limesh(li, 1), k), 2)
             if(limesh(li, 1) == limesh(melink(limesh(li, 1), k), 2)) me2 = limesh(melink(limesh(li, 1), k), 1)
 	    endif
+					! 各辺におけるフラックス（リンク中点の流速×各辺の長さ※xy方向に分解）×図心の流速
           u11 = u11 + uu(melink(limesh(li, 1), k))*umm(me1)*dy - vv(melink(limesh(li, 1), k))*umm(me2)*dx
           v11 = v11 + uu(melink(limesh(li, 1), k))*vnm(me1)*dy - vv(melink(limesh(li, 1), k))*vnm(me2)*dx
   321   enddo
