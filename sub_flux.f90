@@ -26,6 +26,7 @@
       if(inf(limesh(li, 1)) == 0) goto 300
       if(rbeta(li) == 0.0d0) goto 300
       if(h(limesh(li, 1)) <= th .and. h(limesh(li, 2)) <= th) goto 300
+				! メッシュ図心の水深＋標高？ピエゾ水頭？
          hhe = h(limesh(li, 2)) + baseo(limesh(li, 2))
          hhw = h(limesh(li, 1)) + baseo(limesh(li, 1))
          hhep = h(limesh(li, 2)) - th
@@ -34,6 +35,7 @@
 !         水面が不連続
 !     ++++++++++++++++++++++++++++++++
 !     段落ち式
+			! 地盤高の低い方の水深＜地盤高の高い方の水深（図4.11）
       if(hhe < baseo(limesh(li, 1))) then
        if(h(limesh(li, 1)) > th) then
         um(li) = 0.544d0*h(limesh(li, 1))*sqrt(gg*h(limesh(li, 1)))*ux(li)

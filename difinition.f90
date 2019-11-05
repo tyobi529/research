@@ -4,6 +4,7 @@ tday:計算日数
 thour:時間
 tmin:分
 tsec:秒
+th:移動限界水深。これより小さい水深は０として扱う（このプログラムでは1.0d-3で設定されている）
 
 
 sub_connect_1.f90
@@ -31,6 +32,7 @@ uum,vvm:重心の流速
 umm,vnm:重心のフラックス
 u11:連続式の移流項（3辺のリンクのフラックス×図心の速度）
 u13:連続式の重力項
+
 
 
 ファイル
@@ -63,7 +65,6 @@ bsup_sw(i), bsdw_sw(i):上流端/下流端の標高
 mhup_sw(i), mhdw_sw(i):上流端/下流端に接続されているマンホール番号
 ipt_sw(i):その管につながるマンホールの数（１つの直線なら２）
 (x_sw(i,j), y_sw(i,j), j=1,ipt_sw(i)):管につながるマンホールの座標（"ipt_sw"の値によってデータの数が異なる）
-jswr(i):20mの管何個分か（切り捨てなので50mの管なら2）
 
 
 "inputdata/ogurisu_fujita_2.dat" 13番
@@ -113,16 +114,71 @@ hl(li):メッシュの図心の水深
 "out/V-SDM-2.dat"
 "out/sewer_ogurisu.dat"
 
+
+"sub_rdt.f90"
+SUBROUTINE rdat
+dd1_sw(i):管の幅（m）
+dd2_sw(i):管の高さ(m)
+
+jswr(i):20mの管何個分か（切り捨てなので50mの管なら2）
+dx_sw(i):等しく分割した後の長さ（約20m）
+dd:???
+X_M(I,J),Y_M(I,J):i番目の管のj個目の分割したグリッドの中央の座標
+bs_sw(i,j):上の座標の標高地
+CN_I(ME):メッシュ（me）から最も近い下水道管の番号？
+CN_J(ME):メッシュ（me）から最も近い分割した下水道の番号？　つまりメッシュ(me)から最も近い分割された下水道管は(I,J)
+
+SUBROUTINE SORPIPE(I)
+
+SUBROUTINE SD
+
+X_SD:メッシュ図心のx座標
+Y_SD:メッシュ図心のy座標
+X_M(I,J),Y_M(I,J):i番目の管のj個目の分割したグリッドの中央の座標
+DIST(NUM):メッシュの図心とグリッドの中央との距離
+
+
+"subprogs.f90"
 SUBROUTINE STORM_BOX
 NM:道路属性を持つメッシュの総数(計算用)
 SDBR:道路属性を持つメッシュの総数
+CI:
+CJ:
+DIST:メッシュ中心と最寄りの下水道管の距離？
+SDB_V:取付管の容積？
+SDB_H:雨水ます内の水深？
+BS_SDB(NM):雨水ますの底面の標高？
+CN_ME(NM):道路属性のメッシュ番号
 
-subroutine fluxsw
+"sub_confirm.f90"
+SUBROUTINE CONFIRMATION
+
+"sub_flux.f90"
+h:水深？初期値は0
+hhe:メッシュ図心の水深+標高？
+hhw:同上
+
+
+SUBROUTINE fluxsw
 ac_cnq 流量に関するパラメータ？
 q_con_total(con_mh(j))
 q_con(con_mh(j))
 
+
+subroutine sentan
+unitq:段落ち式、越流の際の流量
+
 meshデータ入力流れ
+
+
+SUBROUTINE CONNECT_1
+IC:道路属性のメッシュ番号
+H_SDB(I):雨水ますの水深
+BS_SDB(I):雨水ますの標高
+H(IC):メッシュの水深
+HD:ピエゾ水頭―メッシュの標高？
+HM:メッシュの水深？
+
 
 ⑴"ORI-A-10-5-CNA-1.0.f90"での作業
 data fn/ 'READFILE/ogurisu.dat', 'READFILE/NAKAHAMA_BENTEN.DAT'/

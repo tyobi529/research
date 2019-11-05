@@ -39,8 +39,9 @@ contains
 		    SDB_V = DIST*(PI*0.2D0**2.0D0)/4.0D0
         ! 雨水ます内の水深？
 		    SDB_H = SDB_V/(SDB_X*SDB_W)
-		    
+
 !		    BS_SDB(NM)=BASEO(ME)-SDB_H   !SDB_H 0.3m
+        ! 雨水ます底面の標高？
 		    BS_SDB(NM)=BASEO(ME)-0.3d0
 
 		    CN_ME(NM)=INT(ME)

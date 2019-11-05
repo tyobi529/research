@@ -35,13 +35,16 @@
 !     ===============
 !      ���ʂ̕s�A��
 !     ===============
+				! h_sw=初期値０
         h_up  = h_sw(i, j - 1)  ; h_dw  = h_sw(i, j)
+				! 隣り合うグリッドのそれぞれの標高
         bs_up = bs_sw(i, j - 1) ; bs_dw = bs_sw(i, j)
 
 
 
         call sentan(h_up, h_dw, bs_up, bs_dw, unitq, ist)
         if(ist == 1) then
+					! ？？？？？？
           q_sw(i, j) = unitq * dd1_sw(i)
           goto 303
         endif

@@ -1,10 +1,10 @@
 	module sub_sentan
-	
+
 	use globals
 
 	implicit none
 	contains
-	
+
 !     ====================================
 !            CALCULATION Cutting edge part
 !     ====================================
@@ -19,8 +19,10 @@
           ist = 1
           return
         endif
-          hhe = h_dw + bs_dw    
+				! 　ピエゾ水頭計算
+          hhe = h_dw + bs_dw
           hhw = h_up + bs_up
+					! ？？？？？？？
           hhep = h_dw - th
           hhwp = h_up - th
 !       --------------------------- 段落ち式
@@ -49,8 +51,8 @@
           endif
           ist = 1
         endif
-        
+
 !
       end subroutine sentan
 
-end module sub_sentan	  
+end module sub_sentan
