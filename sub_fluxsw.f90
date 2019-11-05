@@ -44,7 +44,7 @@
 
         call sentan(h_up, h_dw, bs_up, bs_dw, unitq, ist)
         if(ist == 1) then
-					! ？？？？？？
+					! 流量（単位幅流量×幅）
           q_sw(i, j) = unitq * dd1_sw(i)
           goto 303
         endif

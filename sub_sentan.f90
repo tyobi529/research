@@ -16,6 +16,7 @@
         ist = 0
         if(h_up <= th .and. h_dw <= th) then
           unitq = 0.0d0
+					! 先端または両方に水がない
           ist = 1
           return
         endif

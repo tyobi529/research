@@ -260,6 +260,7 @@ ENDIF
 !     $$$$$$$$$$$$$$$$$$$$
 !            �A����
 !     $$$$$$$$$$$$$$$$$$$$
+      ! 連続式で水深の計算
       call suisin(rnof)
       call suisinsw
       CALL SUISIN_BOX
@@ -267,9 +268,12 @@ ENDIF
 !     =================================================================
 !              �����̎Z�o
 !     =================================================================
-	  call mdvel
+      ! 補完の計算
+    call mdvel
       CALL RCAT                   ! REDUCTION OF CONVECTIVE ACCELERATION TERM
+      ! 変数の入れ替え
       call forward
+      ! 降った雨の合計（検算）
       call sumrain(vrain)
 !     ====================
 !         time step
@@ -277,11 +281,12 @@ ENDIF
       time = time + dt
       mstep = mstep + 1
 !     =================================================================
-!              �o��
+!              出力
 !     =================================================================
-      if(mod(mstep, lkout) == 0) call diskwrite
+
+      if(mod(mstep, lkout) == 0) call diskwrite　!ファイルへの書き出し
       if(mod(mstep, lpout) == 0) then
-      call dispwrite(vrain, qout)
+      call dispwrite(vrain, qout) !画面への表示
       if(mod(mstep, LKOUT) == 0) CALL WRUNDER
 !     =================================================================
 !              time judging
