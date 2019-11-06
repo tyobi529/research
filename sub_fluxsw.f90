@@ -120,13 +120,16 @@
 !              ���[�̌v�Z
 !       ------------------------
 !             ---------------------- ! REC�@���`�f��
+				! 長方形
         if(idshp_sw(i) == 1) then
           if(a_sw(i, j) <= (dd1_sw(i)*dd2_sw(i))) then
+
             h_sw(i, j) = a_sw(i, j)/dd1_sw(i)
           else
             h_sw(i, j) = dd2_sw(i) + (a_sw(i, j) - dd1_sw(i)*dd2_sw(i))/BSL(I)
           endif
 !             ---------------------- ! CIR�@�~�`�f��
+				! 円形
         elseif(idshp_sw(i) == 2) then
           IF(A_SW(I,J) <1.0D-6)THEN
             H_SW(I,J) = 0.0D0

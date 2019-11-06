@@ -108,6 +108,10 @@ rthl(li, 1),rthl(li, 2) リンクの中点における水深を求めるため�
 ux(li), uy(li) 速度をxy方向に分解するための値
 hl(li):メッシュの図心の水深
 
+"connection.dat" 503番
+con_mh(i):仮想的なマンホールの番号
+con_mesh(i):下水道とつながる河川メッシュ
+
 "inputdata/pump.dat"
 "out/H-SDM-2.dat"
 "out/U-SDM-2.dat"
@@ -127,6 +131,8 @@ X_M(I,J),Y_M(I,J):i番目の管のj個目の分割したグリッドの中央の
 bs_sw(i,j):上の座標の標高地
 CN_I(ME):メッシュ（me）から最も近い下水道管の番号？
 CN_J(ME):メッシュ（me）から最も近い分割した下水道の番号？　つまりメッシュ(me)から最も近い分割された下水道管は(I,J)
+
+rbeta(li):1.0d0
 
 SUBROUTINE SORPIPE(I)
 
@@ -157,6 +163,22 @@ SUBROUTINE CONFIRMATION
 h:水深？初期値は0
 hhe:メッシュ図心の水深+標高？
 hhw:同上
+
+entry suisin(rnof)
+umbeta(melink(me,k)):リンク(me,k)上のx方向フラックスの合計
+vnbeta(melink(me,k)):リンク(me,k)上のy方向フラックスの合計
+sumf:メッシュ全体のフラックス
+ame(ii(me), jj(me)):メッシュmeの雨データ？
+rr:有効降雨？
+lambda(me):1???
+＜地上の水深計算＞
+ho(me):1つ前の水深
+dt2*(sumf/smesh(me)/(1.0d0 - lambda(me))):流量フラックスによる水深増減（水深減少を正）
+rr/1000.0d0/dtrain*dt2:降雨による水深増減
+qlme(me)*dt2:雨水ますからの交換流量による水深増減
+q_con(con_mh(j))*dt2/smesh(me):河川と下水道管の交換流量による水深増減（河川メッシュのみ）
+
+
 
 
 SUBROUTINE fluxsw

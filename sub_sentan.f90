@@ -23,7 +23,6 @@
 				! 　ピエゾ水頭計算
           hhe = h_dw + bs_dw
           hhw = h_up + bs_up
-					! ？？？？？？？
           hhep = h_dw - th
           hhwp = h_up - th
 !       --------------------------- 段落ち式

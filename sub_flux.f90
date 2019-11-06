@@ -215,6 +215,7 @@
         ! *(1.0d0 - lambda(me))  ! 됄돫궔귞궻봱릣똭뱷귩빶뱑뛩궑?E????E
 
 !小栗栖用
+				! ？？？？？？？？？
         if(time<33000.0d0) rr = ame(ii(me), jj(me))*rnof*0.22d0
         if(time>=33000.0d0 .and. time<43800.0d0) rr = ame(ii(me), jj(me))*rnof*0.40d0
         if(time>=43800.0d0 .and. time<75600.0d0) rr = ame(ii(me), jj(me))*rnof*0.74d0
@@ -225,7 +226,7 @@
 !              h　計算
 !       ------------------------
 
-
+			! 河川メッシュの水深
       do j=1,10
         if(me==con_mesh(j)) then  !connection (畑川)
         h(me)=ho(me) - dt2*(sumf/smesh(me)/(1.0d0 - lambda(me)))    &

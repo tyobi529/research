@@ -261,9 +261,9 @@ ENDIF
 !            �A����
 !     $$$$$$$$$$$$$$$$$$$$
       ! 連続式で水深の計算
-      call suisin(rnof)
-      call suisinsw
-      CALL SUISIN_BOX
+      call suisin(rnof) !地上の水深
+      call suisinsw !下水道管内の水深
+      CALL SUISIN_BOX !雨水ます内の水深
 
 !     =================================================================
 !              �����̎Z�o

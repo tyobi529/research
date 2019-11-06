@@ -78,7 +78,9 @@
 					DV=MIN(DV,HM*ASDB/DT2)
 		    ENDIF
 
+		! 単位長さあたりの流量？
 		QL_SW(IC, JC)=QL_SW(IC, JC)+DV/DX_SW(IC)
+		! 流速
 		QL_SDB(I)=QL_SDB(I)-DV/SDB_X
 
 ENDDO
